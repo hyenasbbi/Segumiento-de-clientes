@@ -11,7 +11,7 @@ Deno.serve(async(req:Request)=>{
  if(req.method==='OPTIONS')return new Response('ok',{headers});
  if(req.method!=='POST')return reply({error:'Método inválido'},405);
  try{
- const key=req.headers.get('x-tracker-key')||'';if(key.length<12||key.length>128)return reply({error:'Acceso inválido'},401);
+ const key=req.headers.get('x-tracker-key')||'';if(key.length<10||key.length>128)return reply({error:'Acceso inválido'},401);
  const keys=await db('ct_access?token_hash=eq.'+await hash(key)+'&select=role,seller_id');const access=keys[0];if(!access)return reply({error:'El enlace o la clave no es válido, o fue revocado.'},401);
  const raw=await req.text();if(raw.length>4000000)return reply({error:'Archivo demasiado grande'},413);const b=JSON.parse(raw);const admin=access.role==='admin';
  if(b.action==='load'){
